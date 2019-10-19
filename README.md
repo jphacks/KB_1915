@@ -1,3 +1,8 @@
+開発の際は作成したVirtualenv環境をアクティベートした上で、サーバーの起動やパッケージのインストールなどを行っていく。
+```
+source venv/bin/activate
+```
+[flask 参考](https://qiita.com/croquette0212/items/9b4dc5377e7d6f292671#hello-world)
 # サンプル（プロダクト名）
 
 [![Product Name](image.png)](https://www.youtube.com/watch?v=G5rULR53uMk)
