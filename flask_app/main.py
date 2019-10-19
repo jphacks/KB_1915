@@ -31,10 +31,11 @@ def api():
 
 @app.route('/callback', methods=['POST'])
 def callback():
-
+  app.logger.info("line_bot_api: " + line_bot_api)
+  app.logger.info("handler: " + handler)
   # get X-Line-Signature header value
   signature = request.headers['X-Line-Signature']
-
+  app.logger.info("signature: " + signature)
   # get request body as text
   body = request.get_data(as_text=True)
   app.logger.info("Request body: " + body)
