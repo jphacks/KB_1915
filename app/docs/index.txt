@@ -1,0 +1,56 @@
+const request = require('request');
+
+const tokenAnalyzeAPICall = (text, {keywordNum=50}={}) => {
+  const options = {
+    url: 'https://gateway-tok.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2018-11-16',
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "text": text,
+      "features": {
+        "keywords": {
+          "limit": keywordNum,
+        },
+        "syntax":{
+          "tokens": {
+            "lemma": true,
+            "part_of_speech": true
+          }
+        }
+      }
+    }),
+    auth: {
+      user: 'apikey',
+      pass: 'M1B7dStQw49nyso4bFPfkEFMGPasiWiYUY3asQOwTT8M'
+    }
+  }
+
+  return new Promise((resolve, reject) => {
+
+    request(options, (error, response, body) => {
+      if (!error && response.statusCode == 200) {
+        resolve(body);
+      }else{
+        reject(null)
+      }
+    })
+  })
+}
+
+const tokenAnalyzer = (text) => {
+  return tokenAnalyzeAPICall(text)
+  .then(response => {
+    if(response == null) throw new Error("[error] Failed to analyze text.")
+    const responseObj = JSON.parse(response)
+
+    return responseObj.syntax.tokens
+              .map(wordData => ({partOfSpeech:wordData["part_of_speech"], word: wordData.text, lemma: wordData.lemma}))
+              .map(wordData => Object.assign(wordData, {difficulty: (wordData.lemma != null ? wordData.lemma.length : wordData.word.length)})) //とりあえず適当に難易度付与
+    
+  })
+}
+
+const HTMLBuilder = (wordsData) => wordsData.map(wordData => "<div>" + `<span class="${wordData.partOfSpeech}">${wordData.word}</span>`).join("") + "</div>"
+tokenAnalyzer('But who comes here?').then(HTMLBuilder).then(x => console.log(x))
