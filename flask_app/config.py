@@ -1,6 +1,6 @@
-URL = "https://tomowarkar.com"
+URL = ""
 
 # /api/koubun.py
-KUSER = 'apikey'
-KPSW = 'M1B7dStQw49nyso4bFPfkEFMGPasiWiYUY3asQOwTT8M'
-KURL = 'https://gateway-tok.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2018-11-16'
+KUSER = ''
+KPSW = ''
+KURL = ''
