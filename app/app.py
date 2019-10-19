@@ -1,5 +1,3 @@
-import os
-import sys
 from flask import Flask, request, abort, render_template
 
 from linebot import (
@@ -14,24 +12,11 @@ from linebot.models import (
 
 app = Flask(__name__)
 
-# 環境変数からchannel_secret・channel_access_tokenを取得
+ACCESS_TOKEN = "3wvxOe6kSmGyu5ALt4Eh8m21CBckgjZAYZowdBXktmiKYPkkI2+7gW9JvZmVxhgi/TeF+guTEC4cSoRSYrJdS/bt+mvhasjRU4jV9A2IS3MxHet07uroE6cd2NNNvOQH8aUeU8a8zOF7LUjUhT28JQdB04t89/1O/w1cDnyilFU="
+CHANNEL_SECRET = "94e56df0d31f206fd6fd62d03467e9e0"
 
-#LINE Access Token
-# channel_access_token = os.environ["LINE_CHANNEL_ACCESS_TOKEN"]
-channel_access_token = "3wvxOe6kSmGyu5ALt4Eh8m21CBckgjZAYZowdBXktmiKYPkkI2+7gW9JvZmVxhgi/TeF+guTEC4cSoRSYrJdS/bt+mvhasjRU4jV9A2IS3MxHet07uroE6cd2NNNvOQH8aUeU8a8zOF7LUjUhT28JQdB04t89/1O/w1cDnyilFU="
-#LINE Channel Secret
-# channel_secret = os.environ["LINE_CHANNEL_SECRET"]
-channel_secret = "94e56df0d31f206fd6fd62d03467e9e0"
-
-if channel_secret is None:
-    print('Specify LINE_CHANNEL_SECRET as environment variable.')
-    sys.exit(1)
-if channel_access_token is None:
-    print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
-    sys.exit(1)
-
-line_bot_api = LineBotApi(channel_access_token)
-handler = WebhookHandler(channel_secret)
+line_bot_api = LineBotApi(ACCESS_TOKEN)
+handler = WebhookHandler(CHANNEL_SECRET)
 
 @app.route('/')
 def index_get():
@@ -50,6 +35,7 @@ def callback():
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
+        print("Invalid signature. Please check your channel access token/channel secret.")
         abort(400)
 
     return 'OK'
@@ -64,4 +50,3 @@ def handle_message(event):
 
 if __name__ == "__main__":
     app.run()
-
