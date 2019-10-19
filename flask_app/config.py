@@ -1,3 +1,6 @@
+# master branchでは記入しない
+# heroku branchで記入
+
 URL = "https://tomowarkar.com"
 
 # /api/koubun.py
