@@ -31,9 +31,28 @@ def api():
 
 @app.route('/callback', methods=['POST'])
 def callback():
-  app.logger.info(request)
-  
+  app.logger.info("line_bot_api: " + str(line_bot_api))
+  app.logger.info("handler: " + str(handler))
+  # get X-Line-Signature header value
+  signature = request.headers['X-Line-Signature']
+  app.logger.info("signature: " + str(signature))
+  # get request body as text
+  body = request.get_data(as_text=True)
+  app.logger.info("Request body: " + str(body))
 
+  # handle webhook body
+  try:
+    handler.handle(body, signature)
+  except InvalidSignatureError:
+    abort(400)
+
+  return 'OK'
+  
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    line_bot_api.reply_message(
+        event.reply_token,
+        [TextSendMessage(text=event.message.text)])
 
 @app.route('/koubun', methods=['POST'])
 def translate_text():
