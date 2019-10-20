@@ -1,0 +1,22 @@
+{
+  "name": "jphacks_linebot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "netlify-lambda serve ./src",
+    "build": "netlify-lambda build ./src"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@firebase/app": "^0.4.20",
+    "@line/bot-sdk": "^6.8.2",
+    "axios": "^0.19.0",
+    "express": "^4.17.1",
+    "netlify-lambda": "^1.6.3",
+    "request": "^2.88.0",
+    "serverless-http": "^2.3.0",
+    "toDataURL": "^0.1.1"
+  }
+}
