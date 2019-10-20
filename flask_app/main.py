@@ -1,21 +1,7 @@
 from flask import request, redirect, render_template,jsonify, flash, abort
 from flask_app import app, config
-from flask_app.api import main, koubun
+from flask_app.api import main, koubun, mojioko, gene_cnt
 from flask_app.line_bot_handler import bot
-
-from linebot import (
-    LineBotApi, WebhookHandler
-)
-from linebot.exceptions import (
-    InvalidSignatureError
-)
-from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,
-)
-import os
-
-line_bot_api = LineBotApi(config.LINE_CHANNEL_ACCESS_TOKEN)
-handler = WebhookHandler(config.LINE_CHANNEL_SECRET)
 
 @app.route('/')
 def show_index():
@@ -29,30 +15,23 @@ def tomowarkar():
 def api():
   return main.text
 
-@app.route('/callback', methods=['POST'])
-def callback():
-  app.logger.info("line_bot_api: " + str(line_bot_api))
-  app.logger.info("handler: " + str(handler))
-  # get X-Line-Signature header value
-  signature = request.headers['X-Line-Signature']
-  app.logger.info("signature: " + str(signature))
-  # get request body as text
-  body = request.get_data(as_text=True)
-  app.logger.info("Request body: " + str(body))
+@app.route('/restest', methods=['POST'])
+def res_checko():
+  data = request.get_json()
+  contents = data['contents']
+  dic = {
+    'status': 'OK',
+    'contents': contents
+  }
+  return jsonify(dic)
 
-  # handle webhook body
-  try:
-    handler.handle(body, signature)
-  except InvalidSignatureError:
-    abort(400)
+@app.route('/mojioko', methods=['POST'])
+def mojioko_img():
+    data = request.get_json()
+    url_input = data['url']
+    text = mojioko.mojioko_main(url_input)
 
-  return 'OK'
-  
-@handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        [TextSendMessage(text=event.message.text)])
+    return text
 
 @app.route('/koubun', methods=['POST'])
 def translate_text():
@@ -61,3 +40,15 @@ def translate_text():
     response = koubun.koubun_main(text_input)
 
     return jsonify(response)
+
+# @app.route('/api/v1', methods=['POST'])
+# def api_v1():
+#   data = request.get_json()
+#   url_input = data['url']
+#   text = mojioko.mojioko_main(url_input)
+#   # return text
+#   res = koubun.koubun_main(text)
+#   # return jsonify(res)
+#   cnt = gene_cnt.gene_cnt_main(res)
+  
+#   return render_template('index.html', cnt=cnt)
