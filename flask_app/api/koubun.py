@@ -27,4 +27,9 @@ def koubun_main(text):
     params = set_req_params(text, 1000)
 
     r = requests.post(config.KURL, data=params, headers=headers, auth=(config.KUSER, config.KPSW)).json()
-    return r
+    try:
+        #英語
+        return r["syntax"]["tokens"]
+    except:
+        # 日本語
+        return ["keywords"]

@@ -41,14 +41,15 @@ def translate_text():
 
     return jsonify(response)
 
-# @app.route('/api/v1', methods=['POST'])
-# def api_v1():
-#   data = request.get_json()
-#   url_input = data['url']
-#   text = mojioko.mojioko_main(url_input)
-#   # return text
-#   res = koubun.koubun_main(text)
-#   # return jsonify(res)
-#   cnt = gene_cnt.gene_cnt_main(res)
-  
-#   return render_template('index.html', cnt=cnt)
+@app.route('/api/v1', methods=['POST'])
+def api_v1():
+  data = request.get_json()
+  url_input = data['url']
+  text = mojioko.mojioko_main(url_input)
+  # return text
+  res = koubun.koubun_main(text)
+  # return jsonify(res)
+  # gene_cnt.gene_cnt_main 日本語の場合対応必要
+  cnt = gene_cnt.gene_cnt_main(res)
+
+  return render_template('index.html', cnt=cnt)
