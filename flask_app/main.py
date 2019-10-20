@@ -1,7 +1,6 @@
 from flask import request, redirect, render_template,jsonify, flash, abort
 from flask_app import app, config
-from flask_app.api import main, koubun, mojioko, gene_cnt
-from flask_app.line_bot_handler import bot
+from flask_app.api import main, koubun, mojioko, gene_cnt, v2
 
 @app.route('/')
 def show_index():
@@ -41,6 +40,10 @@ def translate_text():
 
     return jsonify(response)
 
+@app.route('/api/v1', methods=['GET'])
+def api_get():
+  return render_template('liff.html')
+
 @app.route('/api/v1', methods=['POST'])
 def api_v1():
   data = request.get_json()
@@ -52,4 +55,12 @@ def api_v1():
   # gene_cnt.gene_cnt_main 日本語の場合対応必要
   cnt = gene_cnt.gene_cnt_main(res)
 
-  return render_template('index.html', cnt=cnt)
+  return render_template('liff.html')
+  # return render_template('index.html', cnt=cnt)
+
+@app.route('/api/v2', methods=['POST'])
+def api_v2():
+  data = request.get_json()
+  res = v2.main(data)
+  return jsonify(res)
+  

@@ -4,8 +4,9 @@ import base64
 import json
 
 def mojioko_main(img_url):
-    # img_base64 = img_to_base64(filepath)
-    img_base64 = img_url_to_base64(img_url)
+    img_base64 = img_to_base64("flask_app/static/img/kb-1915.png")
+    # img_base64 = img_url_to_base64(img_url)
+
     result = request_cloud_vison_api(img_base64)
 
     text_r = result["responses"][0]["fullTextAnnotation"]["text"]
